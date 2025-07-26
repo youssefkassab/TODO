@@ -34,5 +34,40 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    // Add support for file uploads
+    window._flutter_web_setImagePickerHandler = function(options) {
+      return new Promise(function(resolve, reject) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        
+        input.onchange = function(e) {
+          const file = e.target.files[0];
+          if (!file) {
+            reject('No file selected');
+            return;
+          }
+          
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const bytes = new Uint8Array(e.target.result);
+            resolve({
+              path: file.name,
+              data: Array.from(bytes),
+              mimeType: file.type || 'image/jpeg',
+              size: file.size
+            });
+          };
+          reader.onerror = function() {
+            reject('Failed to read file');
+          };
+          reader.readAsArrayBuffer(file);
+        };
+        
+        input.click();
+      });
+    };
+  </script>
 </body>
 </html>
