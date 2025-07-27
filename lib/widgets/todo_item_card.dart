@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/todoitem.dart';
-import '../service/todoService.dart';
+import '../service/todo_service.dart';
 
 class TodoItemCard extends StatelessWidget {
   final TodoItem post;

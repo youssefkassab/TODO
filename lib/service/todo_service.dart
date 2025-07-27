@@ -104,7 +104,7 @@ class TodoService {
       rethrow;
     }
   }
-  Future<void> creatPost(TodoItem TodoItem) async {
+  Future<void> creatPost(TodoItem todoItem) async {
     // Ensure token is loaded from SharedPreferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? currentToken = prefs.getString('accessToken');
@@ -116,8 +116,8 @@ class TodoService {
     final response = await client.post(
       Uri.parse("https://todo.hemex.ai/api/todo"),
       headers: {"Content-Type": "application/json","Authorization": "Bearer $currentToken"},
-      body: json.encode(TodoItem.toJson()),);
-    debugPrint("creating post"+response.body);
+      body: json.encode(todoItem.toJson()),);
+    debugPrint("creating post${response.body}");
     if (response.statusCode >= 200 && response.statusCode < 300) {
 
       debugPrint("created post successfully ");

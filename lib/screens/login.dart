@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../service/auth.dart';
-import '../screens/HomeScreen.dart';
+import 'home_screen.dart';
 import '../screens/signup.dart';
-import 'package:flutter/services.dart';
 
 final _formKey = GlobalKey<FormState>();
 final emailController = TextEditingController();
@@ -84,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login"),
@@ -146,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Implement forgot password
+                    debugPrint('Forgot Password');
                   },
                   child: const Text('Forgot Password?'),
                 ),

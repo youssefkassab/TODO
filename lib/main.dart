@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'screens/HomeScreen.dart';
+import 'screens/home_screen.dart';
 import 'theme/theme.dart';
 
 void main() async {

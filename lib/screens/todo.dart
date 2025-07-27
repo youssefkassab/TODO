@@ -2,10 +2,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:todo/models/userdata.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:todo/screens/HomeScreen.dart';
+import 'package:todo/screens/home_screen.dart';
 import 'package:todo/service/auth.dart';
-import '../service/todoService.dart';
-import '../service/userService.dart';
+import '../service/todo_service.dart';
+import '../service/user_service.dart';
 import '../widgets/todo_item_card.dart';
 import '../models/todoitem.dart';
 
@@ -22,10 +22,10 @@ class Todo extends StatefulWidget {
   });
 
   @override
-  _TodoState createState() => _TodoState();
+  TodoState createState() => TodoState();
 }
 
-class _TodoState extends State<Todo> {
+class TodoState extends State<Todo> {
   final TodoService _todoService = TodoService();
   late Future<List<TodoItem>> _todosFuture;
   late bool _currentIsDarkMode;
@@ -58,7 +58,7 @@ class _TodoState extends State<Todo> {
   void _showAddTodoItemDialog(BuildContext context) {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     showDialog(
       context: context,
@@ -67,7 +67,7 @@ class _TodoState extends State<Todo> {
           title: const Text('Add Todo Item'),
           content: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -116,7 +116,7 @@ class _TodoState extends State<Todo> {
             ),
             ElevatedButton(
               onPressed: () async {
-                if (_formKey.currentState!.validate()) {
+                if (formKey.currentState!.validate()) {
                   final title = titleController.text;
                   final description = descriptionController.text;
                   final todoItem = TodoItem(
@@ -159,13 +159,19 @@ class _TodoState extends State<Todo> {
     );
   }
 
-  Future<void> _showUser(BuildContext context) async {
+  Future<void> _showUser(BuildContext dialogContext) async {
+    // Get the current context before any async operations
+    final currentContext = dialogContext;
+
     await mainuser();
-    final UserService _userService = UserService();
-    var user = await _userService.getUser();
+    final UserService userService = UserService();
+    var user = await userService.getUser();
     debugPrint(
       "user todo.dart : ${user.id} ${user.username} ${user.petName} ${user.address} ${user.photo}",
     );
+
+    // Check if the widget is still mounted before proceeding
+    if (!mounted) return;
 
     // Initialize controllers with user data
     final TextEditingController usernameController = TextEditingController(
@@ -182,8 +188,12 @@ class _TodoState extends State<Todo> {
     Uint8List? selectedImageBytes;
     String? selectedImageName;
 
+    // Check again if the widget is still mounted before showing dialog
+    if (!mounted) return;
+
     showDialog(
-      context: context,
+      // ignore: use_build_context_synchronously
+      context: currentContext,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
@@ -339,7 +349,7 @@ class _TodoState extends State<Todo> {
                         ),
                       );
 
-                      await _userService.updatePost(
+                      await userService.updatePost(
                         UserItem(
                           id: user.id,
                           username: usernameController.text,
@@ -462,7 +472,9 @@ class _TodoState extends State<Todo> {
                   // Navigator.push(...)
                 },
                 onUpdatePressed: () {
-                  debugPrint("Update pressed for post: ${snapshot.data![index].id}");
+                  debugPrint(
+                    "Update pressed for post: ${snapshot.data![index].id}",
+                  );
                   final updatePost = TodoItem(
                     id: snapshot.data![index].id,
                     title: snapshot.data![index].title,
@@ -474,8 +486,12 @@ class _TodoState extends State<Todo> {
                   ).showupdatePostDialog(context);
                 },
                 onDeletePressed: () async {
-                  debugPrint("Delete pressed for post: ${snapshot.data![index].id}");
+                  debugPrint(
+                    "Delete pressed for post: ${snapshot.data![index].id}",
+                  );
                   await _todoService.deletePosts(snapshot.data![index].id);
+
+                  // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Todo deleted successfully!'),

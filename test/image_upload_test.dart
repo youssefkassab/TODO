@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:todo/service/userService.dart';
+import 'package:todo/service/user_service.dart';
 import 'package:todo/models/userdata.dart';
 
 // Generate mocks

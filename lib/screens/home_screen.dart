@@ -3,28 +3,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/service/auth.dart';
 import 'package:todo/screens/login.dart';
 import 'package:todo/screens/todo.dart';
-import 'package:todo/service/todoService.dart';
-
-
-
+import 'package:todo/service/todo_service.dart';
 
 class HomeScreen extends StatefulWidget {
   final Function(bool) onThemeChanged;
   final bool isDarkMode;
-  
+
   const HomeScreen({
-    super.key, 
-    required this.onThemeChanged, 
+    super.key,
+    required this.onThemeChanged,
     required this.isDarkMode,
   });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
-
-
-
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -47,42 +40,40 @@ class _HomeScreenState extends State<HomeScreen> {
         debugPrint('token is valid');
         // Ensure token is loaded from SharedPreferences
         await main1();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Todo(
-              onThemeChanged: widget.onThemeChanged,
-              isDarkMode: widget.isDarkMode,
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Todo(
+                onThemeChanged: widget.onThemeChanged,
+                isDarkMode: widget.isDarkMode,
+              ),
             ),
-          ),
-        );
+          );
+        }
       } else {
         debugPrint('invalid');
         // Clear login info if token is invalid
         await prefs.setBool('isLoggedIn', false);
         await prefs.remove('accessToken');
         await prefs.remove('userData');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginScreen(
-              onThemeChanged: widget.onThemeChanged,
-              isDarkMode: widget.isDarkMode,
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(
+                onThemeChanged: widget.onThemeChanged,
+                isDarkMode: widget.isDarkMode,
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
-
-
-
-
