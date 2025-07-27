@@ -40,6 +40,8 @@ class Auth {
       throw Exception("Failed to login${response.body}");
     }
   }
+
+  
   Future<String> signup(String username, String password) async {
     print("AuthService ");
     final response = await client.post(
@@ -60,6 +62,21 @@ class Auth {
       return data['accessToken']; // Assuming the API returns a token
     } else {
       throw Exception("Failed to signup ${response.body}");
+    }
+  }
+  
+  // Log out the user by clearing all stored authentication data
+  Future<void> logout() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('accessToken');
+      await prefs.remove('userData');
+      await prefs.setBool('isLoggedIn', false);
+      // Clear any other user-related data if needed
+      print('User logged out successfully');
+    } catch (e) {
+      print('Error during logout: $e');
+      rethrow;
     }
   }
 }

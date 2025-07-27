@@ -5,7 +5,15 @@ import '../screens/signup.dart';
 var emailController = TextEditingController();
 var passwordController = TextEditingController();
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final Function(bool) onThemeChanged;
+  final bool isDarkMode;
+  
+  const LoginScreen({
+    super.key,
+    required this.onThemeChanged,
+    required this.isDarkMode,
+  });
+  
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -14,32 +22,35 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(
+        title: const Text("Login"),
+        actions: [
+          IconButton(
+            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () {
+              widget.onThemeChanged(!widget.isDarkMode);
+            },
+          ),
+        ],
+      ),
       body: Container(
      padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            Text("Login", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            Text(
+              "Login", 
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 10),
             TextField(
               controller: emailController,
               obscureText: false,
-              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Email',
-                labelStyle: const TextStyle(color: Color(0xFFb3e5fc)),
-                filled: true,
-                fillColor: const Color(0xFF2c5364),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF00c6ff)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF0072ff), width: 2),
                 ),
               ),
             ),
@@ -47,28 +58,18 @@ class _LoginScreenState extends State<LoginScreen> {
             TextField(
               controller: passwordController,
               obscureText: true,
-              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Password',
-                labelStyle: const TextStyle(color: Color(0xFFb3e5fc)),
-                filled: true,
-                fillColor: const Color(0xFF2c5364),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF00c6ff)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF0072ff), width: 2),
                 ),
               ),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              style: ButtonStyle(),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              ),
               onPressed: () async{
                 print("starting login");
                 final authService = Auth();
@@ -76,7 +77,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   emailController.text,
                   passwordController.text,
                 );
-                Navigator.pushReplacement<void ,void>(context, MaterialPageRoute(builder:(BuildContext context) => const HomeScreen()));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                      onThemeChanged: widget.onThemeChanged,
+                      isDarkMode: widget.isDarkMode,
+                    ),
+                  ),
+                );
                 setState(() {
 
                 });
@@ -89,7 +98,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text("Dont have account?", style: TextStyle(color: Colors.blueAccent)),
                   ElevatedButton(onPressed: () {
-                    Navigator.pushReplacement<void ,void>(context, MaterialPageRoute(builder:(BuildContext context) => const SignupScreen()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignupScreen(
+                          onThemeChanged: widget.onThemeChanged,
+                          isDarkMode: widget.isDarkMode,
+                        ),
+                      ),
+                    );
                   }, child: const Text('Signup'),),
                 ]),
 

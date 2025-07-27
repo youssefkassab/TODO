@@ -4,7 +4,15 @@ import '../screens/HomeScreen.dart';
 var emailController = TextEditingController();
 var passwordController = TextEditingController();
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  final Function(bool) onThemeChanged;
+  final bool isDarkMode;
+  
+  const SignupScreen({
+    super.key,
+    required this.onThemeChanged,
+    required this.isDarkMode,
+  });
+  
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
@@ -13,32 +21,35 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Signup")),
+      appBar: AppBar(
+        title: const Text("Signup"),
+        actions: [
+          IconButton(
+            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () {
+              widget.onThemeChanged(!widget.isDarkMode);
+            },
+          ),
+        ],
+      ),
       body: Container(
      padding: EdgeInsets.all(10),
         child: Column(
           children: [
-            Text("Signup", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+            Text(
+              "Signup", 
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 10),
             TextField(
               controller: emailController,
               obscureText: false,
-              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Email',
-                labelStyle: const TextStyle(color: Color(0xFFb3e5fc)),
-                filled: true,
-                fillColor: const Color(0xFF2c5364),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF00c6ff)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF0072ff), width: 2),
                 ),
               ),
             ),
@@ -46,27 +57,18 @@ class _SignupScreenState extends State<SignupScreen> {
             TextField(
               controller: passwordController,
               obscureText: true,
-              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Password',
-                labelStyle: const TextStyle(color: Color(0xFFb3e5fc)),
-                filled: true,
-                fillColor: const Color(0xFF2c5364),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF00c6ff)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF0072ff), width: 2),
                 ),
               ),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+              ),
               onPressed: () async{
                 print("starting signup");
                 final authService = Auth();
@@ -75,7 +77,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   passwordController.text,
                 );
 if (response != null) {
-                Navigator.pushReplacement<void ,void>(context, MaterialPageRoute(builder:(BuildContext context) => const HomeScreen()));
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                      onThemeChanged: widget.onThemeChanged,
+                      isDarkMode: widget.isDarkMode,
+                    ),
+                  ),
+                );
                 setState(() {});
 }
               },

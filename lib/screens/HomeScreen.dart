@@ -11,7 +11,14 @@ import 'package:todo/service/todoService.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(bool) onThemeChanged;
+  final bool isDarkMode;
+  
+  const HomeScreen({
+    super.key, 
+    required this.onThemeChanged, 
+    required this.isDarkMode,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -44,7 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
         await main1();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Todo()),
+          MaterialPageRoute(
+            builder: (context) => Todo(
+              onThemeChanged: widget.onThemeChanged,
+              isDarkMode: widget.isDarkMode,
+            ),
+          ),
         );
       } else {
         print('invalid');
@@ -54,7 +66,12 @@ class _HomeScreenState extends State<HomeScreen> {
         await prefs.remove('userData');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(
+              onThemeChanged: widget.onThemeChanged,
+              isDarkMode: widget.isDarkMode,
+            ),
+          ),
         );
       }
     });
