@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../models/userdata.dart';
@@ -8,7 +9,7 @@ dynamic data = {};
 dynamic data1;
 
 Future<void> mainuser() async {
-  print("get user data");
+  debugPrint("get user data");
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   data = prefs.getString('userData');
   data1 = json.decode(data);
@@ -45,11 +46,11 @@ class UserService {
         }
         return UserItem.fromJson(data);
       } else {
-        print("Error fetching user data. Status code: ${response.statusCode}");
+          debugPrint("Error fetching user data. Status code: ${response.statusCode}");
         throw Exception("Failed to load user data");
       }
     } catch (e) {
-      print("Error in getUser: $e");
+      debugPrint("Error in getUser: $e");
       rethrow;
     }
   }
@@ -86,14 +87,14 @@ class UserService {
       final response = await http.Response.fromStream(streamedResponse);
       
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Update user successful: ${response.body}");
+        debugPrint("Update user successful: ${response.body}");
       } else {
-        print("Failed to update user. Status: ${response.statusCode}");
-        print("Response: ${response.body}");
+        debugPrint("Failed to update user. Status: ${response.statusCode}");
+        debugPrint("Response: ${response.body}");
         throw Exception("Failed to update user: ${response.statusCode}");
       }
     } catch (e) {
-      print('Error in updatePost: $e');
+      debugPrint('Error in updatePost: $e');
       rethrow;
     }
   }

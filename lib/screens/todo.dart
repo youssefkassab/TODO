@@ -462,7 +462,7 @@ class _TodoState extends State<Todo> {
                   // Navigator.push(...)
                 },
                 onUpdatePressed: () {
-                  print("Update pressed for post: ${snapshot.data![index].id}");
+                  debugPrint("Update pressed for post: ${snapshot.data![index].id}");
                   final updatePost = TodoItem(
                     id: snapshot.data![index].id,
                     title: snapshot.data![index].title,
@@ -474,7 +474,7 @@ class _TodoState extends State<Todo> {
                   ).showupdatePostDialog(context);
                 },
                 onDeletePressed: () async {
-                  print("Delete pressed for post: ${snapshot.data![index].id}");
+                  debugPrint("Delete pressed for post: ${snapshot.data![index].id}");
                   await _todoService.deletePosts(snapshot.data![index].id);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

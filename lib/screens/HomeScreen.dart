@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/service/auth.dart';
@@ -36,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _checkLoginStatus() async {
-    print('checking login status');
+    debugPrint('checking login status');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('accessToken');
     final Auth auth = Auth();
@@ -46,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (valid) {
-        print('token is valid');
+        debugPrint('token is valid');
         // Ensure token is loaded from SharedPreferences
         await main1();
         Navigator.pushReplacement(
@@ -59,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       } else {
-        print('invalid');
+        debugPrint('invalid');
         // Clear login info if token is invalid
         await prefs.setBool('isLoggedIn', false);
         await prefs.remove('accessToken');

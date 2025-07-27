@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../models/todoitem.dart';
 
 String token ="" ;
 Future<void> main1() async {
-  print("get token");
+  debugPrint("get token");
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   token = prefs.getString('accessToken')!;
 }
@@ -57,49 +58,49 @@ class TodoService {
       'description': todoItem.description,
     });
     
-    print('Sending update request for todo ID: ${todoItem.id}');
-    print('Request body: $body');
+    debugPrint('Sending update request for todo ID: ${todoItem.id}');
+    debugPrint('Request body: $body');
     
     // First try with PUT
     try {
-      print('Trying PUT request...');
+      debugPrint('Trying PUT request...');
       final response = await client.put(
         Uri.parse("https://todo.hemex.ai/api/todo/${todoItem.id}"),
         headers: headers,
         body: body,
       );
       
-      print("PUT response status: ${response.statusCode}");
-      print("PUT response body: ${response.body}");
+      debugPrint("PUT response status: ${response.statusCode}");
+      debugPrint("PUT response body: ${response.body}");
       
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Successfully updated todo using PUT: $todoItem");
+        debugPrint("Successfully updated todo using PUT: $todoItem");
         return;
       }
     } catch (e) {
-      print('PUT request failed: $e');
+      debugPrint('PUT request failed: $e');
     }
     
     // If PUT fails, try with PATCH
     try {
-      print('Trying PATCH request...');
+      debugPrint('Trying PATCH request...');
       final response = await client.patch(
         Uri.parse("https://todo.hemex.ai/api/todo/${todoItem.id}"),
         headers: headers,
         body: body,
       );
       
-      print("PATCH response status: ${response.statusCode}");
-      print("PATCH response body: ${response.body}");
+      debugPrint("PATCH response status: ${response.statusCode}");
+      debugPrint("PATCH response body: ${response.body}");
       
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        print("Successfully updated todo using PATCH: $todoItem");
+        debugPrint("Successfully updated todo using PATCH: $todoItem");
         return;
       } else {
         throw Exception("Failed to update todo. Status: ${response.statusCode}, Body: ${response.body}");
       }
     } catch (e) {
-      print('PATCH request failed: $e');
+      debugPrint('PATCH request failed: $e');
       rethrow;
     }
   }
@@ -116,10 +117,10 @@ class TodoService {
       Uri.parse("https://todo.hemex.ai/api/todo"),
       headers: {"Content-Type": "application/json","Authorization": "Bearer $currentToken"},
       body: json.encode(TodoItem.toJson()),);
-    print("creating post"+response.body);
+    debugPrint("creating post"+response.body);
     if (response.statusCode >= 200 && response.statusCode < 300) {
 
-      print("created post successfully ");
+      debugPrint("created post successfully ");
     } else {
       throw Exception("Failed to create post");
     }
@@ -136,8 +137,9 @@ class TodoService {
     final response = await client.delete(
         Uri.parse("https://todo.hemex.ai/api/todo/$id"),
       headers: {"Content-Type": "application/json","Authorization": "Bearer $currentToken"},);
+      debugPrint("deleted post successfully");
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      print("deleted post successfully");
+      debugPrint("deleted post successfully");
 
     } else {
       throw Exception("Failed to delete posts");

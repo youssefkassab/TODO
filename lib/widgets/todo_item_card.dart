@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/todoitem.dart';
 import '../service/todoService.dart';
-import '../screens/todo.dart';
 
 class TodoItemCard extends StatelessWidget {
   final TodoItem post;
@@ -98,7 +97,7 @@ class TodoItemCard extends StatelessWidget {
                   title: titleController.text,
                   description: bodyController.text,
                 );
-                print('Updating post: $updatedPost');
+                debugPrint('Updating post: $updatedPost');
                 
                 final todoService = TodoService();
                 await todoService.updatePost(updatedPost);
@@ -120,7 +119,7 @@ class TodoItemCard extends StatelessWidget {
                   );
                 }
               } catch (e) {
-                print('Error updating post: $e');
+                debugPrint('Error updating post: $e');
                 // Show error message
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
