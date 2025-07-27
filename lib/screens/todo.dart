@@ -213,7 +213,7 @@ class TodoState extends State<Todo> {
                               : (user.modifiedPhoto != null &&
                                             user.modifiedPhoto!.isNotEmpty
                                         ? NetworkImage(
-                                            "https://todo.hemex.ai/${user.modifiedPhoto}",
+                                            "https://todo.hemex.ai/uploads/${user.modifiedPhoto}",
                                           )
                                         : const AssetImage(
                                             'assets/image/logo.png',
